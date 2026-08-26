@@ -17,12 +17,14 @@ usage() {
 Usage: scripts/omapath-plugin <command> [--dry-run]
 
 Commands:
-  install   Add the public repository and enable its bar widget
-  update    Update the installed git checkout
-  remove    Remove the installed plugin checkout
+  install   Add the public repository, enable its service, and create a launcher entry
+  update    Update the installed plugin checkout and refresh the launcher entry
+  remove    Remove the launcher entry and installed plugin checkout
   validate  Validate the local plugin checkout
 
 The lifecycle commands use the official `omarchy plugin` subcommands.
+The service-only plugin has no Omarchy bar widget. Its service creates the
+user-local .desktop file used by the normal application launcher.
 `--dry-run` prints the command without changing state.
 USAGE
 }
@@ -47,17 +49,43 @@ run_omarchy() {
   omarchy "$@"
 }
 
+installed_plugin_dir() {
+  printf '%s\n' "${HOME:?}/.config/omarchy/plugins/$PLUGIN_ID"
+}
+
+desktop_helper() {
+  local helper="$(installed_plugin_dir)/scripts/desktop-entry.sh"
+  if (( DRY_RUN )); then
+    printf 'dry-run: desktop-entry %q\n' "$1"
+    return 0
+  fi
+  [[ -x "$helper" ]] || die "installed plugin is missing its desktop-entry helper: $helper"
+  "$helper" "$1"
+}
+
 install_plugin() {
   require_omarchy
   run_omarchy plugin add "$REPOSITORY_URL" --enable --yes
+  desktop_helper install
 }
 
 update_plugin() {
   require_omarchy
   run_omarchy plugin update "$PLUGIN_ID" --yes
+  desktop_helper install
 }
 
 remove_plugin() {
+  local helper="$(installed_plugin_dir)/scripts/desktop-entry.sh"
+  if (( DRY_RUN )); then
+    desktop_helper remove
+  elif [[ -x "$helper" ]]; then
+    "$helper" remove
+  elif [[ -x "$PROJECT_DIR/scripts/desktop-entry.sh" ]]; then
+    # The marker check in the helper makes this fallback safe when the
+    # checkout has already disappeared but the user launcher remains.
+    "$PROJECT_DIR/scripts/desktop-entry.sh" remove
+  fi
   require_omarchy
   run_omarchy plugin remove "$PLUGIN_ID" --yes
 }

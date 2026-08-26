@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 
 from omapath.responsive import (
     ResponsiveMode,
@@ -38,6 +39,18 @@ class ResponsivePolicyTests(unittest.TestCase):
         self.assertEqual(grid_inset_for_mode(ResponsiveMode.NARROW), (8, 9, 10))
         self.assertFalse(mode_uses_sidebar_overlay(ResponsiveMode.MEDIUM))
         self.assertTrue(mode_uses_sidebar_overlay(ResponsiveMode.NARROW))
+
+    def test_sidebar_drawer_is_above_its_backdrop(self) -> None:
+        source_path = Path(__file__).resolve().parents[1] / "omapath" / "ui" / "simple_window.py"
+        source = source_path.read_text(encoding="utf-8")
+        show_section = source.split("    def _show_responsive_drawer", 1)[1].split(
+            "    def _close_responsive_drawer", 1
+        )[0]
+        self.assertLess(
+            show_section.index("backdrop = self._ensure_responsive_backdrop()"),
+            show_section.index("self.workspace_overlay.add_overlay(widget)"),
+        )
+        self.assertIn("self.workspace_overlay.remove_overlay(widget)", show_section)
 
 
 if __name__ == "__main__":

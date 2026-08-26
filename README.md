@@ -62,10 +62,17 @@ omarchy plugin remove io.github.pluseight8.omapath --yes
 ```
 
 The repository wrappers `./install.sh`, `./update.sh` and `./uninstall.sh`
-invoke those same official commands. They do not install a system package,
-Python package, desktop entry or separate launcher. The only Omarchy entry
-point is the `io.github.pluseight8.omapath` bar widget, which starts the GTK4
-window from the managed plugin checkout.
+invoke those same official commands and maintain the launcher entry. The
+service-only plugin has no bar widget and does not add anything to the Omarchy
+panel. When enabled, it creates the user-local
+`$XDG_DATA_HOME/applications/io.github.pluseight8.omapath.desktop` (or
+`~/.local/share/applications/...`) with an absolute path into the managed
+plugin checkout. The normal application launcher can then start Omapath.
+
+Use `./uninstall.sh` for removal so the launcher entry is removed before the
+plugin checkout. The plugin service recreates or refreshes the entry after a
+shell reload, and `./update.sh` refreshes it after an update. No system-wide
+package or file is installed.
 
 For source-level development only, `./run.sh` can launch the current checkout;
 that is not an installation path.
@@ -115,10 +122,11 @@ accessible fallback is used; no particular theme is assumed. The setting
 
 ### Omarchy shell plugin
 
-The repository also contains the official Omarchy shell-plugin wrapper. The
-plugin is intentionally a small bar launcher: Omapath remains a native GTK4
-application with its own window, while `omarchy-shell` loads only the QML bar
-widget. It does not replace or embed the working `SimpleFileView`.
+The repository contains the official Omarchy shell-plugin wrapper. The plugin
+is intentionally service-only: Omapath remains a native GTK4 application with
+its own window, while `omarchy-shell` only maintains the user-local launcher
+entry. It does not add a panel button, replace, or embed the working
+`SimpleFileView`.
 
 Complete install, update and removal from the public repository:
 
@@ -136,10 +144,11 @@ omarchy plugin update io.github.pluseight8.omapath --yes
 omarchy plugin remove io.github.pluseight8.omapath --yes
 ```
 
-The convenience scripts call only those commands. No repository install hook,
-desktop file or system-wide file is created. Omarchy's official installer never
-executes repository install hooks; the shell plugin is therefore fully
-described by `manifest.json` and `BarWidget.qml`.
+The convenience scripts call the official plugin commands and then invoke the
+plugin-owned `scripts/desktop-entry.sh` helper. Omarchy's official installer
+does not execute arbitrary repository install hooks; the enabled service is
+therefore responsible for recreating the launcher entry when the shell loads
+the plugin.
 
 Before enabling a local checkout, validate it with:
 
@@ -148,9 +157,9 @@ omarchy plugin validate .
 python3 scripts/validate_plugin.py
 ```
 
-The bar entry is installed disabled unless `--enable` is supplied; the helper
-enables it in the default left bar section. Plugin code runs unsandboxed inside
-the Omarchy shell, so review the repository before enabling it.
+The service is enabled by `--enable` and has no visible bar entry. Plugin code
+runs unsandboxed inside the Omarchy shell, so review the repository before
+enabling it.
 
 Settings are stored atomically at `~/.config/omapath/settings.json`. The first
 run migrates compatible values from the previous

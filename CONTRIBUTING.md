@@ -14,7 +14,7 @@ python3 -m compileall -q omapath tests
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 -m unittest tests.test_gtk_api -v
 python3 scripts/validate_plugin.py
-bash -n scripts/omapath-plugin install.sh update.sh uninstall.sh
+bash -n scripts/omapath-plugin scripts/desktop-entry.sh install.sh update.sh uninstall.sh
 ```
 
 The GTK display smoke test is skipped when no display is available. In a real
@@ -35,9 +35,10 @@ complete `docs/MANUAL_QA.md`; never report a headless run as visual success.
 - Make one extraction or behavior change at a time and stop at the first
   failing gate.
 
-The Omarchy integration is a QML bar launcher for the native GTK application.
-Keep `manifest.json` and `BarWidget.qml` compatible with Omarchy's plugin
-validator; do not move the file view into the shell process. The project is
+The Omarchy integration is a service-only QML launcher entry for the native GTK
+application. Keep `manifest.json`, `Service.qml` and the marker-guarded
+`scripts/desktop-entry.sh` compatible with Omarchy's plugin validator; do not
+move the file view into the shell process or add a bar widget. The project is
 installed only through Omarchy's plugin lifecycle, never through the Python or
 Arch packaging metadata in a user session.
 

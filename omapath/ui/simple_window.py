@@ -3250,16 +3250,22 @@ class OmapathApplication(Gtk.Application):
         if self.workspace_overlay is None:
             return
         self._close_responsive_drawer()
-        if widget.get_parent() is not self.workspace_overlay:
-            self.workspace_overlay.add_overlay(widget)
+        # Gtk.Overlay paints later-added overlays above earlier ones. Install
+        # the backdrop first, then move the active drawer to the top; adding
+        # the backdrop after the drawer made the whole window (including the
+        # sidebar itself) look permanently dimmed.
+        backdrop = self._ensure_responsive_backdrop()
+        if backdrop is None:
+            return
+        if widget.get_parent() is self.workspace_overlay:
+            self.workspace_overlay.remove_overlay(widget)
+        self.workspace_overlay.add_overlay(widget)
         widget.add_css_class("responsive-drawer")
         widget.set_halign(Gtk.Align.END if info else Gtk.Align.START)
         widget.set_valign(Gtk.Align.FILL)
         widget.set_hexpand(False)
         widget.set_vexpand(True)
-        backdrop = self._ensure_responsive_backdrop()
-        if backdrop is not None:
-            backdrop.set_visible(True)
+        backdrop.set_visible(True)
         widget.set_visible(True)
         self.responsive_drawer_widget = widget
         self.responsive_info_drawer_open = info
