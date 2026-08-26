@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.pluseight8.omapath",
   "name": "Omapath",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "pluseight8",
   "license": "MIT",
   "description": "Add the native GTK4 Omapath file manager to the Omarchy application launcher.",
