@@ -49,27 +49,26 @@ active Omarchy accent, while the content area stays dense and desktop-native.
 - Persistent pinned/starred/recent locations, XDG Places, a filesystem device
   entry and live folder/theme monitoring.
 
-## Installation
+## Installation: Omarchy plugin only
 
-System dependencies are GTK4, GIO/GVfs and PyGObject (`python3-gi`). On
-Omarchy these are normally provided by the system. For a local development
-install:
-
-```bash
-python3 -m pip install .
-omapath
-```
-
-The development launcher is also available:
+Omapath is installed and managed only as an Omarchy shell plugin. System
+dependencies are GTK4, GIO/GVfs and PyGObject (`python3-gi`); on Omarchy these
+are normally provided by the system. The official plugin lifecycle is:
 
 ```bash
-./run.sh
+omarchy plugin add https://github.com/pluseight8/omapath.git --enable --yes
+omarchy plugin update io.github.pluseight8.omapath --yes
+omarchy plugin remove io.github.pluseight8.omapath --yes
 ```
 
-The desktop entry and AppStream metadata are in `data/`. Install them with
-your distribution's normal desktop-file/icon/AppStream workflow. The app ID is
-`dev.omarchy.Omapath`. The supplied neon-green folder/terminal mark is shipped
-as the primary high-resolution hicolor icon, with a scalable SVG fallback.
+The repository wrappers `./install.sh`, `./update.sh` and `./uninstall.sh`
+invoke those same official commands. They do not install a system package,
+Python package, desktop entry or separate launcher. The only Omarchy entry
+point is the `io.github.pluseight8.omapath` bar widget, which starts the GTK4
+window from the managed plugin checkout.
+
+For source-level development only, `./run.sh` can launch the current checkout;
+that is not an installation path.
 
 ## Keyboard shortcuts
 
@@ -137,12 +136,10 @@ omarchy plugin update io.github.pluseight8.omapath --yes
 omarchy plugin remove io.github.pluseight8.omapath --yes
 ```
 
-The convenience scripts call those commands and additionally maintain a
-user-local application launcher at
-`~/.local/share/applications/io.github.pluseight8.omapath.desktop`. Removal
-deletes only a launcher carrying Omapath's ownership marker. Omarchy's official
-installer never executes repository install hooks; the shell plugin itself is
-therefore fully described by `manifest.json` and `BarWidget.qml`.
+The convenience scripts call only those commands. No repository install hook,
+desktop file or system-wide file is created. Omarchy's official installer never
+executes repository install hooks; the shell plugin is therefore fully
+described by `manifest.json` and `BarWidget.qml`.
 
 Before enabling a local checkout, validate it with:
 

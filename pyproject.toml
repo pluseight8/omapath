@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omapath"
+version = "0.2.0"
+description = "The native file manager for Omarchy."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [{name = "Omapath contributors"}]
+dependencies = []
+
+[project.scripts]
+omapath = "omapath.app:main"
+
+[tool.setuptools]
+packages = ["omapath", "omapath.ui"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=Omapath
+GenericName=File Manager
+Comment=The native file manager for Omarchy.
+Exec=omapath %U
+Icon=dev.omarchy.Omapath
+Terminal=false
+Categories=FileManager;System;FileTools;
+MimeType=inode/directory;application/x-7z-compressed;application/zip;application/x-tar;application/pdf;text/plain;
+StartupNotify=true
+StartupWMClass=dev.omarchy.Omapath
+Actions=new-window;
+
+[Desktop Action new-window]
+Name=New window
+Exec=omapath

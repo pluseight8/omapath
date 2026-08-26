@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.pluseight8.omapath",
+  "name": "Omapath",
+  "version": "0.2.0",
+  "author": "pluseight8",
+  "license": "MIT",
+  "description": "Open the native GTK4 Omapath file manager from the Omarchy bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Omapath",
+    "description": "Open the Omapath file manager",
+    "category": "System",
+    "defaultSection": "left",
+    "allowMultiple": false
+  }
+}

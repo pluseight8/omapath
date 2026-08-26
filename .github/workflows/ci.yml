@@ -1,0 +1,27 @@
+name: Omapath quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GTK/GIO runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-gi gir1.2-gtk-4.0 gir1.2-gdkpixbuf-2.0 desktop-file-utils
+      - name: Compile
+        run: python3 -m py_compile omapath/*.py omapath/ui/*.py
+      - name: Headless unit and integration tests
+        run: PYTHONPATH=. python3 -m unittest discover -s tests -v
+      - name: Benchmark smoke test
+        run: PYTHONPATH=. python3 benchmark.py --entries 1000
+      - name: Validate desktop entry
+        run: desktop-file-validate data/dev.omarchy.Omapath.desktop
+      - name: Validate Omarchy plugin package
+        run: |
+          python3 scripts/validate_plugin.py
+          bash -n scripts/omapath-plugin install.sh update.sh uninstall.sh

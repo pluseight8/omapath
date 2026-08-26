@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dev.omarchy.Omapath</id>
+  <name>Omapath</name>
+  <summary>The native file manager for Omarchy</summary>
+  <url type="homepage">https://omarchy.org/</url>
+  <developer>
+    <name>Omapath contributors</name>
+  </developer>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>Omapath is a fast, keyboard-first GTK4 file manager designed for Omarchy and Hyprland.</p>
+    <p>It provides Icons, Compact and Details views, tabs, split view, folders and terminal panels, drag-and-drop copy/move/link, safe local operations with undo, Quick Look, properties, archive actions, recursive and content search, removable devices and an external URI clipboard.</p>
+    <p>Nautilus-inspired integrations add Starred and Recent places, files from <code>~/Templates</code>, executable user scripts and GIO server connections while retaining the Omarchy theme.</p>
+  </description>
+  <launchable type="desktop-id">dev.omarchy.Omapath.desktop</launchable>
+  <provides>
+    <binary>omapath</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+</component>
